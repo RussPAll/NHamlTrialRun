@@ -35,9 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NHaml, Version=1.6.0.0, Culture=neutral, PublicKeyToken=d603208bac452365, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\NHaml.dll</HintPath>
+    <Reference Include="NHaml4">
+      <HintPath>lib\NHaml4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,7 +59,7 @@
     <None Include="app.config" />
     <None Include="Views\layout.haml" />
     <None Include="Views\Project.haml" />
-    <None Include="Views\_Job.haml" />
+    <None Include="Views\Job.haml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

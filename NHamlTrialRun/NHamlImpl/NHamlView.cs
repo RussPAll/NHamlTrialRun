@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml;
 using System.IO;
 
 namespace NHamlTrialRun.NHamlImpl
 {
-    public abstract class NHamlView : NHaml.Template
+    public abstract class NHamlView : NHaml4.TemplateBase.Template
     {
         public string Render()
         {

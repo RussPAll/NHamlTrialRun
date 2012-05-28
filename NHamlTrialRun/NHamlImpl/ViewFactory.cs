@@ -2,31 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml;
-using NHaml.TemplateResolution;
 using NHamlTrialRun.Model;
+using NHaml4;
+using NHaml4.TemplateResolution;
+using System.IO;
 
 namespace NHamlTrialRun.NHamlImpl
 {
     public class ViewFactory
     {
-        private TemplateOptions GetOptions() //rstackhouse: wondering about the sanity of creating multiple options classes
+        private FileTemplateContentProvider _fileTemplateResolver;
+        private TemplateEngine _templateEngine;
+
+        public ViewFactory()
         {
-            var templateOptions = new TemplateOptions();
-            templateOptions.EncodeHtml = false;
-            templateOptions.AutoRecompile = true; //TODO: figure out what this does
-            templateOptions.IndentSize = 2;
-            templateOptions.AddReferences(typeof(Task));
+            _fileTemplateResolver = new FileTemplateContentProvider();
+            _fileTemplateResolver.AddPathSource(GetBaseTemplatePath());
 
-            //class providing content to the engine, should implement ITemplateContentProvider
-            var fileTemplateResolver = new FileTemplateContentProvider();
-            fileTemplateResolver.PathSources = new[] { GetBaseTemplatePath() }.ToList();
-
-            templateOptions.AddUsing("NHamlTrialRun.Helpers");
-
-            templateOptions.TemplateContentProvider = fileTemplateResolver;
-
-            return templateOptions;
+            _templateEngine = GetEngine();
         }
 
         private string GetBaseTemplatePath()
@@ -34,28 +27,27 @@ namespace NHamlTrialRun.NHamlImpl
             return System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"..\..\", "Views");
         }
 
-        private TemplateEngine GetEngine(Type t)
+        private TemplateEngine GetEngine()
         {
-            var options = GetOptions();
-            options.TemplateBaseType = t;
-            return new TemplateEngine(options);
+            return NHaml4.Configuration.XmlConfigurator.GetTemplateEngine(_fileTemplateResolver,
+                new List<string> { "NHamlTrialRun.Helpers", },
+                new List<string> { typeof(Task).Assembly.Location });
         }
 
         public NHamlView<T> Create<T>(string viewName)
         {
-            var engine = GetEngine(typeof(NHamlView<T>));
-            return (NHamlView<T>)GetCompiledTemplate(engine, viewName).CreateInstance();
+            return (NHamlView<T>)GetCompiledTemplate(viewName, typeof(T)).CreateTemplate();
         }
 
         public NHamlLayout CreateLayout(string layoutName)
         {
-            var engine = GetEngine(typeof(NHamlLayout));
-            return (NHamlLayout)GetCompiledTemplate(engine, layoutName).CreateInstance();
+            return (NHamlLayout)GetCompiledTemplate(layoutName, typeof(NHamlLayout)).CreateTemplate();
         }
 
-        private CompiledTemplate GetCompiledTemplate(TemplateEngine engine, string templateName)
+        private TemplateFactory GetCompiledTemplate(string templateName, Type type)
         {
-            return  engine.Compile(templateName + ".haml");
+            var viewSource = _fileTemplateResolver.GetViewSource(templateName + ".haml");
+            return _templateEngine.GetCompiledTemplate(viewSource, type);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml;
 using NHamlTrialRun.Model;
 using NHamlTrialRun.NHamlImpl;
 using NHamlViewFactory = NHamlTrialRun.NHamlImpl.ViewFactory;
