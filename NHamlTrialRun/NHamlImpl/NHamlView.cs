@@ -6,7 +6,7 @@ using System.IO;
 
 namespace NHamlTrialRun.NHamlImpl
 {
-    public abstract class NHamlView : NHaml4.TemplateBase.Template
+    public abstract class NHamlView<T> : NHaml4.TemplateBase.TypedTemplate<T>
     {
         public string Render()
         {
@@ -24,17 +24,8 @@ namespace NHamlTrialRun.NHamlImpl
             return Render();
         }
     }
-
-    public class NHamlView<T> :  NHamlView
-    {
-        public NHamlView()
-        {
-        }
-
-        public T Model { get; set; }
-    }
-
-    public class NHamlLayout : NHamlView
+    
+    public class NHamlLayout : NHamlView<object>
     {
         public NHamlLayout()
         {

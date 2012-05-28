@@ -6,6 +6,7 @@ using NHamlTrialRun.Model;
 using NHaml4;
 using NHaml4.TemplateResolution;
 using System.IO;
+using NHaml4.TemplateBase;
 
 namespace NHamlTrialRun.NHamlImpl
 {
@@ -36,7 +37,7 @@ namespace NHamlTrialRun.NHamlImpl
 
         public NHamlView<T> Create<T>(string viewName)
         {
-            return (NHamlView<T>)GetCompiledTemplate(viewName, typeof(T)).CreateTemplate();
+            return (NHamlView<T>)GetCompiledTemplate(viewName, typeof(NHamlView<T>)).CreateTemplate();
         }
 
         public NHamlLayout CreateLayout(string layoutName)
